@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { YardBlockModal } from "./YardBlockModal";
 import { Container, AlertTriangle, CheckCircle } from "lucide-react";
+import { useState } from "react";
 import type { YardBlock } from "../../lib/mockData";
 
 interface YardGridProps {
@@ -13,6 +15,8 @@ interface YardGridProps {
 }
 
 export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedBlockData, setSelectedBlockData] = useState<YardBlock | null>(null);
   const getStatusColor = (status: YardBlock["status"]) => {
     switch (status) {
       case "critical":
@@ -49,6 +53,12 @@ export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps
     }
   };
 
+  const handleBlockClick = (block: YardBlock) => {
+    setSelectedBlockData(block);
+    setModalOpen(true);
+    onBlockSelect(block.code);
+  };
+
   return (
     <Card className="bg-card shadow-card border-0">
       <CardHeader>
@@ -79,7 +89,7 @@ export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps
                   className={`cursor-pointer transition-all duration-300 hover:shadow-depth ${
                     isSelected ? 'ring-2 ring-primary shadow-glow' : ''
                   } ${block.status === 'critical' ? 'animate-surge-pulse' : ''}`}
-                  onClick={() => onBlockSelect(block.id)}
+                  onClick={() => handleBlockClick(block)}
                 >
                   <CardContent className="p-4 space-y-3">
                     {/* Header */}
@@ -168,6 +178,16 @@ export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps
           </div>
         </div>
       </CardContent>
+      
+      <YardBlockModal
+        block={selectedBlockData}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onExecuteMove={() => {
+          console.log('Execute move for block:', selectedBlockData?.code);
+          setModalOpen(false);
+        }}
+      />
     </Card>
   );
 }

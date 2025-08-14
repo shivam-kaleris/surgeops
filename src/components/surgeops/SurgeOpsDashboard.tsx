@@ -119,8 +119,8 @@ export function SurgeOpsDashboard() {
 
         {/* Row 3: Operations Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* Yard + Berth Status */}
-          <div className="lg:col-span-8 space-y-4">
+          {/* Yard Status - Full Width */}
+          <div className="lg:col-span-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -132,63 +132,52 @@ export function SurgeOpsDashboard() {
                 selectedBlock={selectedYardBlock}
               />
             </motion.div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <BerthStatus 
-                  berths={dashboardData.berths}
-                  onBerthSelect={setSelectedBerth}
-                  selectedBerth={selectedBerth}
-                />
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-              >
-                <BerthStatus 
-                  berths={dashboardData.berths.slice(0, 2)}
-                  onBerthSelect={setSelectedBerth}
-                  selectedBerth={selectedBerth}
-                />
-              </motion.div>
-            </div>
           </div>
 
-          {/* Control Panels */}
-          <div className="lg:col-span-4 space-y-4">
+          {/* Berth Status */}
+          <div className="lg:col-span-4">
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <EventsPanel events={dashboardData.events} />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <SurgeOpsChat />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              <TestPanel onSimulate={(type, magnitude) => {
-                console.log(`Simulating ${type} with magnitude ${magnitude}`);
-                setDashboardData(mockData.getDashboardData());
-              }} />
+              <BerthStatus 
+                berths={dashboardData.berths}
+                onBerthSelect={setSelectedBerth}
+                selectedBerth={selectedBerth}
+              />
             </motion.div>
           </div>
+        </div>
+
+        {/* Row 4: Control Panels */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <EventsPanel events={dashboardData.events} />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <SurgeOpsChat />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            <TestPanel onSimulate={(type, magnitude) => {
+              console.log(`Simulating ${type} with magnitude ${magnitude}`);
+              setDashboardData(mockData.getDashboardData());
+            }} />
+          </motion.div>
         </div>
       </motion.div>
     </div>
