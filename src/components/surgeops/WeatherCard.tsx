@@ -2,16 +2,38 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Cloud, Thermometer, Wind, Droplets, ChevronDown, ChevronUp } from "lucide-react";
+import { Cloud, Thermometer, Wind, Droplets, ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import type { WeatherData } from "../../lib/mockData";
 
 interface WeatherCardProps {
   weather: WeatherData;
+  onLocationChange?: (location: string, timeZone: string) => void;
 }
 
-export function WeatherCard({ weather }: WeatherCardProps) {
+export function WeatherCard({ weather, onLocationChange }: WeatherCardProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedPort, setSelectedPort] = useState("singapore");
+
+  const ports = [
+    { value: "singapore", label: "Singapore Port", timeZone: "Asia/Singapore" },
+    { value: "rotterdam", label: "Port of Rotterdam", timeZone: "Europe/Amsterdam" },
+    { value: "shanghai", label: "Port of Shanghai", timeZone: "Asia/Shanghai" },
+    { value: "losangeles", label: "Port of Los Angeles", timeZone: "America/Los_Angeles" },
+    { value: "dubai", label: "Port of Dubai", timeZone: "Asia/Dubai" },
+    { value: "hamburg", label: "Port of Hamburg", timeZone: "Europe/Berlin" },
+    { value: "hongkong", label: "Port of Hong Kong", timeZone: "Asia/Hong_Kong" },
+    { value: "newyork", label: "Port of New York", timeZone: "America/New_York" },
+  ];
+
+  const handlePortChange = (portValue: string) => {
+    const port = ports.find(p => p.value === portValue);
+    if (port) {
+      setSelectedPort(portValue);
+      onLocationChange?.(port.label, port.timeZone);
+    }
+  };
   const getImpactColor = (impact: WeatherData["operationalImpact"]) => {
     switch (impact) {
       case "High":
@@ -75,6 +97,31 @@ export function WeatherCard({ weather }: WeatherCardProps) {
         
         <CollapsibleContent>
           <CardContent className="space-y-4 pt-0">
+            {/* Port Selector */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <MapPin className="h-3 w-3" />
+                Port Location
+              </label>
+              <Select 
+                value={selectedPort} 
+                onValueChange={handlePortChange}
+              >
+                <SelectTrigger 
+                  className="w-full"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ports.map((port) => (
+                    <SelectItem key={port.value} value={port.value}>
+                      {port.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             {/* Current Condition */}
             <div className="text-center p-4 bg-gradient-depth rounded-lg">
               <div className="text-4xl mb-2">{weather.icon}</div>

@@ -16,6 +16,8 @@ export function SurgeOpsDashboard() {
   const [selectedYardBlock, setSelectedYardBlock] = useState<string | null>(null);
   const [selectedBerth, setSelectedBerth] = useState<string | null>(null);
   const [events, setEvents] = useState(dashboardData.events);
+  const [currentPort, setCurrentPort] = useState("Singapore Port");
+  const [currentTimeZone, setCurrentTimeZone] = useState("Asia/Singapore");
 
   // Simulate real-time updates
   useEffect(() => {
@@ -33,6 +35,11 @@ export function SurgeOpsDashboard() {
 
   const handleClearAllEvents = () => {
     setEvents([]);
+  };
+
+  const handleLocationChange = (location: string, timeZone: string) => {
+    setCurrentPort(location);
+    setCurrentTimeZone(timeZone);
   };
 
   return (
@@ -82,10 +89,11 @@ export function SurgeOpsDashboard() {
               <div className="text-lg font-mono">
                 {new Date().toLocaleTimeString('en-US', { 
                   hour12: false,
+                  timeZone: currentTimeZone,
                   timeZoneName: 'short'
                 })}
               </div>
-              <div className="text-sm text-primary-foreground/60">Singapore Port</div>
+              <div className="text-sm text-primary-foreground/60">{currentPort}</div>
             </div>
           </div>
         </motion.div>
@@ -173,13 +181,16 @@ export function SurgeOpsDashboard() {
               />
             </motion.div>
             
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <WeatherCard weather={dashboardData.weather} />
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <WeatherCard 
+                  weather={dashboardData.weather} 
+                  onLocationChange={handleLocationChange}
+                />
+              </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: 20 }}
