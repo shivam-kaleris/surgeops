@@ -200,8 +200,8 @@ export function UtilizationChart({ data }: UtilizationChartProps) {
   const trend = currentUtilization - previousUtilization;
 
   return (
-    <Card className="bg-gradient-to-br from-white to-slate-50 shadow-xl border-0 hover:shadow-2xl transition-all duration-300">
-      <CardHeader className="flex flex-row items-center justify-between pb-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
+    <Card className="bg-gradient-to-br from-white to-slate-50 shadow-xl border-0 hover:shadow-2xl transition-all duration-300 h-[400px] flex flex-col">
+      <CardHeader className="flex flex-row items-center justify-between pb-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg flex-shrink-0">
         <div>
           <CardTitle className="flex items-center gap-2 text-base font-semibold text-slate-800">
             <TrendingUp className="h-4 w-4 text-blue-600" />
@@ -216,8 +216,8 @@ export function UtilizationChart({ data }: UtilizationChartProps) {
           </p>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 bg-white">
-        <div className="h-72 p-2">
+      <CardContent className="pt-0 bg-white flex-1 flex items-center">
+        <div className="w-full h-full p-2">
           <Line data={chartData} options={options} />
         </div>
       </CardContent>

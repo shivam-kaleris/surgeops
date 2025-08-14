@@ -101,19 +101,24 @@ export function SurgeOpsChat() {
   };
 
   return (
-    <Card className="bg-card shadow-card border-0">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-          <MessageSquare className="h-5 w-5 text-primary" />
-          SurgeOps AI Assistant
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">
+    <Card className="bg-card shadow-card border-0 hover:shadow-glow transition-all duration-300 h-[400px] flex flex-col">
+      <CardHeader className="flex-shrink-0">
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-base font-semibold">
+            <MessageSquare className="h-4 w-4 text-primary" />
+            SurgeOps AI Assistant
+          </CardTitle>
+          <Badge variant="secondary" className="text-xs bg-success/20 text-success border-success/30">
+            Online
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground">
           RAG-powered chatbot with live data access
         </p>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="flex-1 overflow-hidden flex flex-col">
         {/* Sample Queries */}
-        <div className="space-y-2">
+        <div className="space-y-2 flex-shrink-0 mb-4">
           <p className="text-xs font-medium text-muted-foreground">Try asking:</p>
           <div className="flex flex-wrap gap-1">
             {sampleQueries.slice(0, 2).map((query, index) => (
@@ -130,8 +135,8 @@ export function SurgeOpsChat() {
           </div>
         </div>
 
-        {/* Chat Messages */}
-        <div className="space-y-3 max-h-48 overflow-y-auto">
+        {/* Messages area */}
+        <div className="flex-1 overflow-y-auto space-y-3 min-h-0 mb-4">
           <AnimatePresence>
             {messages.map((message) => (
               <motion.div
@@ -217,24 +222,26 @@ export function SurgeOpsChat() {
           )}
         </div>
 
-        {/* Input */}
-        <div className="flex gap-2">
-          <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask about vessels, yards, weather, or operations..."
-            className="flex-1"
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            disabled={isLoading}
-          />
-          <Button
-            onClick={handleSendMessage}
-            disabled={!inputValue.trim() || isLoading}
-            size="sm"
-            className="px-3"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+        {/* Input section */}
+        <div className="flex-shrink-0">
+          <div className="flex gap-2">
+            <Input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Ask about vessels, yards, weather..."
+              className="flex-1 text-xs"
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              disabled={isLoading}
+            />
+            <Button
+              onClick={handleSendMessage}
+              disabled={!inputValue.trim() || isLoading}
+              size="sm"
+              className="px-3"
+            >
+              <Send className="h-3 w-3" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
