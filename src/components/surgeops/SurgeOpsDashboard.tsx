@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "../AppSidebar";
-import { SurgeDetectionModal } from "./SurgeDetectionModal";
 import { DashboardKPIs } from "./DashboardKPIs";
 import { UtilizationChart } from "./UtilizationChart";
 import { YardGrid } from "./YardGrid";
@@ -18,214 +15,171 @@ export function SurgeOpsDashboard() {
   const [dashboardData, setDashboardData] = useState(mockData.getDashboardData());
   const [selectedYardBlock, setSelectedYardBlock] = useState<string | null>(null);
   const [selectedBerth, setSelectedBerth] = useState<string | null>(null);
-  const [surgeModalOpen, setSurgeModalOpen] = useState(false);
-  const [surgeData, setSurgeData] = useState<any>(null);
 
-  // Simulate real-time updates and surge detection
+  // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
       setDashboardData(mockData.getDashboardData());
-      
-      // Simulate surge detection (10% chance every update)
-      if (Math.random() < 0.1) {
-        setSurgeData({
-          severity: ["MEDIUM", "HIGH", "CRITICAL"][Math.floor(Math.random() * 3)],
-          riskScore: 75 + Math.floor(Math.random() * 25),
-          affectedBlocks: ["B1", "B2", "B3"].slice(0, Math.floor(Math.random() * 3) + 1),
-          suggestedActions: [
-            {
-              action: "Emergency Relocation",
-              from: "B1",
-              to: "B4",
-              teu: 150,
-              priority: "HIGH" as const
-            },
-            {
-              action: "Load Balancing",
-              from: "B2", 
-              to: "B5",
-              teu: 200,
-              priority: "MEDIUM" as const
-            }
-          ],
-          eta: "2 hours",
-          weatherImpact: "High winds expected"
-        });
-        setSurgeModalOpen(true);
-      }
-    }, 8000); // Check every 8 seconds for demo
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex w-full bg-slate-50">
-        <AppSidebar />
-        
-        <div className="flex-1 flex flex-col">
-          {/* Header with Sidebar Trigger */}
-          <header className="h-16 border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-40">
-            <div className="flex items-center justify-between h-full px-6">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger className="h-8 w-8" />
+    <div className="min-h-screen bg-gradient-depth p-3 md:p-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-7xl mx-auto space-y-4"
+      >
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-gradient-ocean text-white px-6 py-4 rounded-xl shadow-depth"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/10 rounded-lg">
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L13.5 2.5L16.17 5.24C15.81 5.42 15.56 5.8 15.56 6.24C15.56 6.9 16.05 7.44 16.67 7.5L18.5 9.5L17 11L15 9L11 13L13 15L15 13L17 15L21 11V9ZM11 22H13V20H15V18H13V16H11V18H9V20H11V22Z"/>
+                  </svg>
+                </div>
                 <div>
-                  <h1 className="text-xl font-bold text-slate-800">Operations Dashboard</h1>
-                  <p className="text-sm text-slate-600">Real-time port management system</p>
+                  <h1 className="text-2xl font-bold">SurgeOps</h1>
+                  <p className="text-primary-foreground/80 text-sm">Port Authority Operations Center</p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-4">
-                <div className="text-right">
-                  <div className="text-sm font-medium text-slate-800">
-                    {new Date().toLocaleDateString('en-US', { 
-                      weekday: 'short', 
-                      month: 'short', 
-                      day: 'numeric'
-                    })}
-                  </div>
-                  <div className="text-xs text-slate-600 font-mono">
-                    {new Date().toLocaleTimeString('en-US', { 
-                      hour12: false,
-                      timeZoneName: 'short'
-                    })}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                  OPERATIONAL
-                </div>
+              <div className="flex items-center gap-2 px-3 py-1 bg-success/20 rounded-full">
+                <div className="w-2 h-2 bg-success rounded-full"></div>
+                <span className="text-success text-sm font-medium">OPERATIONAL</span>
               </div>
             </div>
-          </header>
+            
+            <div className="text-right">
+              <div className="text-sm text-primary-foreground/80">
+                {new Date().toLocaleDateString('en-US', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </div>
+              <div className="text-lg font-mono">
+                {new Date().toLocaleTimeString('en-US', { 
+                  hour12: false,
+                  timeZoneName: 'short'
+                })}
+              </div>
+              <div className="text-sm text-primary-foreground/60">Singapore Port</div>
+            </div>
+          </div>
+        </motion.div>
 
-          {/* Main Content */}
-          <main className="flex-1 p-6 space-y-6 overflow-auto">
-            {/* KPIs Row */}
+        {/* Row 1: KPIs - Full Width */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="w-full"
+        >
+          <DashboardKPIs data={dashboardData.kpis} />
+        </motion.div>
+
+        {/* Row 2: Chart + Weather + Alerts */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="lg:col-span-2"
+          >
+            <UtilizationChart data={dashboardData.chartData} />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <WeatherCard weather={dashboardData.weather} />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <AlertsPanel alerts={dashboardData.alerts} />
+          </motion.div>
+        </div>
+
+        {/* Row 3: Operations Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          {/* Yard Status - Full Width */}
+          <div className="lg:col-span-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={{ delay: 0.5 }}
             >
-              <DashboardKPIs data={dashboardData.kpis} />
+              <YardGrid 
+                blocks={dashboardData.yardBlocks}
+                onBlockSelect={setSelectedYardBlock}
+                selectedBlock={selectedYardBlock}
+              />
             </motion.div>
+          </div>
 
-            {/* Chart + Monitoring Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="lg:col-span-8"
-              >
-                <UtilizationChart data={dashboardData.chartData} />
-              </motion.div>
-              
-              <div className="lg:col-span-4 space-y-4">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <WeatherCard weather={dashboardData.weather} />
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <AlertsPanel alerts={dashboardData.alerts} />
-                </motion.div>
-              </div>
-            </div>
-
-            {/* Operations Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="lg:col-span-8"
-              >
-                <YardGrid 
-                  blocks={dashboardData.yardBlocks}
-                  onBlockSelect={setSelectedYardBlock}
-                  selectedBlock={selectedYardBlock}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-                className="lg:col-span-4"
-              >
-                <BerthStatus 
-                  berths={dashboardData.berths}
-                  onBerthSelect={setSelectedBerth}
-                  selectedBerth={selectedBerth}
-                />
-              </motion.div>
-            </div>
-
-            {/* Control Panels Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <EventsPanel events={dashboardData.events} />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <SurgeOpsChat />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-              >
-                <TestPanel onSimulate={(type, magnitude) => {
-                  console.log(`Simulating ${type} with magnitude ${magnitude}`);
-                  if (type === "surge") {
-                    setSurgeData({
-                      severity: magnitude > 0.7 ? "CRITICAL" : magnitude > 0.5 ? "HIGH" : "MEDIUM",
-                      riskScore: Math.floor(magnitude * 100),
-                      affectedBlocks: ["B1", "B2"],
-                      suggestedActions: [
-                        {
-                          action: "Emergency Relocation",
-                          from: "B1",
-                          to: "B4",
-                          teu: Math.floor(magnitude * 300),
-                          priority: "HIGH" as const
-                        }
-                      ],
-                      eta: "1 hour",
-                      weatherImpact: "Simulated conditions"
-                    });
-                    setSurgeModalOpen(true);
-                  }
-                  setDashboardData(mockData.getDashboardData());
-                }} />
-              </motion.div>
-            </div>
-          </main>
+          {/* Berth Status */}
+          <div className="lg:col-span-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <BerthStatus 
+                berths={dashboardData.berths}
+                onBerthSelect={setSelectedBerth}
+                selectedBerth={selectedBerth}
+              />
+            </motion.div>
+          </div>
         </div>
 
-        {/* Surge Detection Modal */}
-        <SurgeDetectionModal
-          isOpen={surgeModalOpen}
-          onClose={() => setSurgeModalOpen(false)}
-          surgeData={surgeData}
-        />
-      </div>
-    </SidebarProvider>
+        {/* Row 4: Control Panels */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <EventsPanel events={dashboardData.events} />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <SurgeOpsChat />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            <TestPanel onSimulate={(type, magnitude) => {
+              console.log(`Simulating ${type} with magnitude ${magnitude}`);
+              setDashboardData(mockData.getDashboardData());
+            }} />
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
   );
 }

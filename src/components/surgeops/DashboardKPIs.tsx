@@ -43,14 +43,14 @@ export function DashboardKPIs({ data }: DashboardKPIsProps) {
   const getColorClasses = (color: string) => {
     switch (color) {
       case "destructive":
-        return "bg-red-500 text-white shadow-red-200";
+        return "bg-destructive text-destructive-foreground";
       case "warning":
-        return "bg-amber-500 text-white shadow-amber-200";
+        return "bg-warning text-warning-foreground";
       case "success":
-        return "bg-emerald-500 text-white shadow-emerald-200";
+        return "bg-success text-success-foreground";
       case "primary":
       default:
-        return "bg-blue-500 text-white shadow-blue-200";
+        return "bg-primary text-primary-foreground";
     }
   };
 
@@ -65,21 +65,19 @@ export function DashboardKPIs({ data }: DashboardKPIsProps) {
           whileHover={{ scale: 1.02 }}
           className="animate-fade-in-up"
         >
-          <Card className="bg-gradient-card shadow-depth border-0 hover:shadow-glow transition-all duration-300 group">
+          <Card className="bg-card shadow-card border-0 hover:shadow-depth transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">
+              <CardTitle className="text-xs font-medium text-muted-foreground">
                 {kpi.title}
               </CardTitle>
-              <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-primary/10 transition-colors">
-                <kpi.icon className="h-4 w-4 text-slate-500 group-hover:text-primary transition-colors" />
-              </div>
+              <kpi.icon className="h-3 w-3 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="space-y-3 pt-0">
-              <div className="text-2xl font-bold text-slate-800">
+            <CardContent className="space-y-2 pt-0">
+              <div className="text-xl font-bold text-foreground">
                 {kpi.value}
               </div>
               <Badge 
-                className={`${getColorClasses(kpi.color)} text-xs font-medium px-2 py-1 shadow-sm`}
+                className={`${getColorClasses(kpi.color)} text-xs font-medium px-2 py-0.5`}
                 variant="secondary"
               >
                 {kpi.trend}

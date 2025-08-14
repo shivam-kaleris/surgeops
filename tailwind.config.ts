@@ -134,17 +134,12 @@ export default {
 			backgroundImage: {
 				'gradient-ocean': 'var(--gradient-ocean)',
 				'gradient-harbor': 'var(--gradient-harbor)',
-				'gradient-depth': 'var(--gradient-depth)',
-				'gradient-card': 'var(--gradient-card)'
+				'gradient-depth': 'var(--gradient-depth)'
 			},
 			boxShadow: {
 				'depth': 'var(--shadow-depth)',
 				'glow': 'var(--shadow-glow)',
 				'card': 'var(--shadow-card)'
-			},
-			fontFamily: {
-				sans: 'var(--font-sans)',
-				mono: 'var(--font-mono)'
 			}
 		}
 	},
