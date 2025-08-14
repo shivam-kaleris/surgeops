@@ -48,6 +48,10 @@ export function WeatherCard({ weather, onLocationChange }: WeatherCardProps) {
     const convertedTemp = convertTemperature(temp, tempUnit);
     return `${convertedTemp.toFixed(1)}°${tempUnit}`;
   };
+
+  const getCurrentPort = () => {
+    return ports.find(p => p.value === selectedPort)?.label || "Singapore Port";
+  };
   const getImpactColor = (impact: WeatherData["operationalImpact"]) => {
     switch (impact) {
       case "High":
@@ -98,7 +102,7 @@ export function WeatherCard({ weather, onLocationChange }: WeatherCardProps) {
               )}
             </CardTitle>
             <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">{weather.location}</p>
+              <p className="text-sm text-muted-foreground">{getCurrentPort()}</p>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{weather.icon}</span>
                 <Badge className={`${getImpactColor(weather.operationalImpact)}`}>
