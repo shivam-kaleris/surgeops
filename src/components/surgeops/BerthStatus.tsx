@@ -67,16 +67,18 @@ export function BerthStatus({ berths, onBerthSelect, selectedBerth }: BerthStatu
         </CardHeader>
         
         <CardContent className="p-4">
-          <div className="space-y-4">
+          {/* Horizontal scrollable berths */}
+          <div className="flex gap-4 overflow-x-auto pb-2">
             {berths.map((berth, index) => (
               <motion.div
                 key={berth.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
+                className="min-w-[280px] flex-shrink-0"
               >
                 <Card 
-                  className={`cursor-pointer transition-all duration-200 border-2 ${
+                  className={`cursor-pointer transition-all duration-200 border-2 h-full ${
                     selectedBerth === berth.id 
                       ? 'border-primary bg-primary/5' 
                       : 'border-border hover:border-primary/50'
@@ -85,71 +87,67 @@ export function BerthStatus({ berths, onBerthSelect, selectedBerth }: BerthStatu
                 >
                   <CardContent className="p-4">
                     {/* Berth Header */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
                         <div className="font-bold text-lg">{berth.code}</div>
                         <Badge variant="secondary" className={`${getStatusColor(berth.status)} text-white text-xs px-2 py-1`}>
                           {berth.status}
                         </Badge>
-                        <div className="text-sm text-muted-foreground">
-                          {berth.assignments.reduce((sum, a) => sum + a.vessel.expectedTeu, 0).toLocaleString()} TEU
-                        </div>
                       </div>
-                      <div className="w-32 bg-border rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full ${getStatusColor(berth.status)} transition-all duration-300`}
-                          style={{ width: `${berth.status === 'Occupied' ? 100 : berth.status === 'Available' ? 0 : 50}%` }}
-                        />
-                      </div>
+                    </div>
+
+                    <div className="text-sm text-muted-foreground mb-3">
+                      {berth.assignments.reduce((sum, a) => sum + a.vessel.expectedTeu, 0).toLocaleString()} TEU
+                    </div>
+
+                    <div className="w-full bg-border rounded-full h-2 mb-4">
+                      <div 
+                        className={`h-2 rounded-full ${getStatusColor(berth.status)} transition-all duration-300`}
+                        style={{ width: `${berth.status === 'Occupied' ? 100 : berth.status === 'Available' ? 0 : 50}%` }}
+                      />
                     </div>
 
                     {/* Assigned Vessels */}
                     <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
                       <Users className="h-3 w-3" />
-                      <span>Assigned Vessels ({berth.assignments.length})</span>
+                      <span>Vessels ({berth.assignments.length})</span>
                     </div>
 
                     {berth.assignments.length === 0 ? (
-                      <div className="text-center py-6 text-muted-foreground">
-                        <Ship className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">No vessels assigned</p>
+                      <div className="text-center py-4 text-muted-foreground">
+                        <Ship className="h-6 w-6 mx-auto mb-2 opacity-50" />
+                        <p className="text-xs">No vessels assigned</p>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                        {berth.assignments.map((assignment, aIndex) => (
+                      <div className="space-y-2 max-h-32 overflow-y-auto">
+                        {berth.assignments.slice(0, 2).map((assignment) => (
                           <div
                             key={assignment.id}
-                            className="border border-border rounded-lg p-3 bg-muted/20"
+                            className="border border-border rounded-lg p-2 bg-muted/20"
                           >
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                <Ship className="h-4 w-4 text-primary" />
-                                <span className="font-semibold text-sm">{assignment.vessel.name}</span>
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-1">
+                                <Ship className="h-3 w-3 text-primary" />
+                                <span className="font-semibold text-xs truncate">{assignment.vessel.name}</span>
                               </div>
                               <Badge variant="outline" className={`text-xs ${getVesselStatusColor(assignment.vessel.status)}`}>
                                 {assignment.vessel.status}
                               </Badge>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-2 text-xs">
-                              <div>
-                                <span className="text-muted-foreground">IMO:</span>
-                                <div className="font-mono">{assignment.vessel.imo}</div>
-                              </div>
-                              <div>
-                                <span className="text-muted-foreground">TEU:</span>
-                                <div>{assignment.vessel.expectedTeu.toLocaleString()}</div>
-                              </div>
-                            </div>
-
-                            <div className="mt-2 text-xs">
-                              <div className="flex items-center gap-1 text-muted-foreground">
-                                <Clock className="h-3 w-3" />
-                                <span>ETA: {format(new Date(assignment.plannedStart), "MMM dd, HH:mm")}</span>
-                              </div>
+                            <div className="flex justify-between text-xs">
+                              <span className="text-muted-foreground">TEU: {assignment.vessel.expectedTeu.toLocaleString()}</span>
+                              <span className="text-muted-foreground">
+                                ETA: {format(new Date(assignment.plannedStart), "MMM dd")}
+                              </span>
                             </div>
                           </div>
                         ))}
+                        {berth.assignments.length > 2 && (
+                          <div className="text-xs text-muted-foreground text-center">
+                            +{berth.assignments.length - 2} more vessels
+                          </div>
+                        )}
                       </div>
                     )}
                   </CardContent>

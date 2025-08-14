@@ -154,7 +154,7 @@ export function SurgeOpsDashboard() {
             </div>
           </div>
 
-          {/* Bottom Section: Operations Overview */}
+          {/* Bottom Section: Operations Overview - Side by Side */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Yard Operations */}
             <motion.div
