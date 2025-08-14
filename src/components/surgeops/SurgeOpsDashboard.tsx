@@ -151,31 +151,35 @@ export function SurgeOpsDashboard() {
               </motion.div>
             </div>
 
-            {/* Yard Status - Full Width */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <YardGrid 
-                blocks={dashboardData.yardBlocks}
-                onBlockSelect={setSelectedYardBlock}
-                selectedBlock={selectedYardBlock}
-              />
-            </motion.div>
+            {/* Yard Status - Centered Full Width */}
+            <div className="px-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <YardGrid 
+                  blocks={dashboardData.yardBlocks}
+                  onBlockSelect={setSelectedYardBlock}
+                  selectedBlock={selectedYardBlock}
+                />
+              </motion.div>
+            </div>
 
-            {/* Berth Status - Full Width Row */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <BerthStatus 
-                berths={dashboardData.berths}
-                onBerthSelect={setSelectedBerth}
-                selectedBerth={selectedBerth}
-              />
-            </motion.div>
+            {/* Berth Status - Centered Full Width */}
+            <div className="px-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <BerthStatus 
+                  berths={dashboardData.berths}
+                  onBerthSelect={setSelectedBerth}
+                  selectedBerth={selectedBerth}
+                />
+              </motion.div>
+            </div>
           </div>
         </div>
       </motion.div>
