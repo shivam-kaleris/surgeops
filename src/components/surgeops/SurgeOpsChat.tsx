@@ -101,47 +101,39 @@ export function SurgeOpsChat() {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 shadow-xl border-0 hover:shadow-2xl transition-all duration-300 h-[400px] flex flex-col overflow-hidden">
-      <CardHeader className="flex-shrink-0 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+    <Card className="bg-card shadow-card border-0 hover:shadow-glow transition-all duration-300 h-[400px] flex flex-col">
+      <CardHeader className="flex-shrink-0 bg-gradient-ocean text-white">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-3 text-base font-bold">
-            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-              <Bot className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-3 text-base font-semibold">
+            <div className="p-1.5 bg-white/10 rounded-lg">
+              <MessageSquare className="h-4 w-4" />
             </div>
             <div>
               <div className="text-white">SurgeOps AI Assistant</div>
-              <div className="text-xs text-indigo-200 font-normal">Powered by RAG Technology</div>
+              <div className="text-xs text-primary-foreground/80 font-normal">RAG-powered operational queries</div>
             </div>
           </CardTitle>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-xs text-indigo-200">Live</span>
+              <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+              <span className="text-xs text-primary-foreground/80">Live</span>
             </div>
-            <Badge variant="secondary" className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm">
-              Online
-            </Badge>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 overflow-hidden flex flex-col bg-white/50 backdrop-blur-sm">
-        {/* Sample Queries */}
-        <div className="space-y-2 flex-shrink-0 mb-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
-          <p className="text-xs font-semibold text-indigo-700 flex items-center gap-2">
-            <MessageSquare className="h-3 w-3" />
-            Quick Actions
-          </p>
-          <div className="flex flex-wrap gap-2">
+      <CardContent className="flex-1 overflow-hidden flex flex-col pt-4">
+        {/* Quick Actions */}
+        <div className="flex-shrink-0 mb-4">
+          <h3 className="text-xs font-medium text-muted-foreground mb-2">Try asking:</h3>
+          <div className="space-y-1">
             {sampleQueries.slice(0, 2).map((query, index) => (
-              <Button
+              <button
                 key={index}
-                variant="ghost"
-                size="sm"
-                onClick={() => handleSampleQuery(query)}
-                className="text-xs px-3 py-1 bg-white/80 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 hover:text-indigo-800 rounded-full transition-all duration-200 hover:scale-105"
+                onClick={() => setInputValue(query)}
+                className="w-full text-left text-xs px-3 py-2 bg-muted/50 hover:bg-muted rounded-lg border border-border/50 hover:border-border transition-colors"
               >
                 {query}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
@@ -157,34 +149,28 @@ export function SurgeOpsChat() {
                 transition={{ duration: 0.3 }}
                 className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                <div className={`max-w-[85%] rounded-lg px-3 py-2 ${
                   message.type === 'user' 
-                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white' 
-                    : 'bg-white border border-gray-200 text-gray-800 shadow-sm'
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'bg-muted/50 text-foreground'
                 }`}>
                   <div className="flex items-start gap-2">
                     {message.type === 'assistant' && (
-                      <div className="flex-shrink-0 mt-0.5">
-                        <div className="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
-                          <Bot className="h-3 w-3 text-white" />
-                        </div>
-                      </div>
+                      <Bot className="h-4 w-4 mt-0.5 text-primary flex-shrink-0" />
                     )}
                     <div className="flex-1">
-                      <p className={`text-xs leading-relaxed ${
-                        message.type === 'user' ? 'text-white' : 'text-gray-700'
-                      }`}>
+                      <p className="text-xs leading-relaxed">
                         {message.message}
                       </p>
                       {message.sources && (
                         <div className="mt-2 space-y-1">
                           {message.sources.map((source, index) => (
                             <div key={index} className="text-xs">
-                              <button className="flex items-center gap-1 text-indigo-600 hover:text-indigo-700 transition-colors">
+                              <button className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors">
                                 <ExternalLink className="h-3 w-3" />
                                 <span className="underline">{source.title}</span>
                               </button>
-                              <p className="text-gray-500 text-xs mt-1">{source.snippet}</p>
+                              <p className="text-muted-foreground text-xs mt-1">{source.snippet}</p>
                             </div>
                           ))}
                         </div>
@@ -202,15 +188,13 @@ export function SurgeOpsChat() {
               animate={{ opacity: 1 }}
               className="flex justify-start"
             >
-              <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm">
+              <div className="bg-muted/50 rounded-lg px-3 py-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <Bot className="h-3 w-3 text-white" />
-                  </div>
+                  <Bot className="h-4 w-4 text-primary" />
                   <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-1 h-1 bg-primary rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>
@@ -219,25 +203,24 @@ export function SurgeOpsChat() {
         </div>
 
         {/* Input section */}
-        <div className="flex-shrink-0 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 border-t border-indigo-100">
-          <div className="flex gap-2">
+        <div className="flex-shrink-0">
+          <form onSubmit={handleSendMessage} className="flex gap-2">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask about vessels, yards, weather..."
-              className="flex-1 text-xs border-indigo-200 focus:border-indigo-400 bg-white/80 backdrop-blur-sm"
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              className="flex-1 text-xs"
               disabled={isLoading}
             />
             <Button
-              onClick={handleSendMessage}
+              type="submit"
               disabled={!inputValue.trim() || isLoading}
               size="sm"
-              className="px-4 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 shadow-md hover:shadow-lg transition-all duration-200"
+              className="px-3"
             >
               <Send className="h-3 w-3" />
             </Button>
-          </div>
+          </form>
         </div>
       </CardContent>
     </Card>
