@@ -74,9 +74,9 @@ export function SurgeOpsDashboard() {
             
             {/* Centered OPERATIONAL Status */}
             <div className="absolute left-1/2 transform -translate-x-1/2">
-              <div className="flex items-center gap-2 px-4 py-2 bg-success/20 rounded-full">
+              <div className="flex items-center gap-2 px-4 py-2 bg-success/20 rounded-full border border-success/30">
                 <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
-                <span className="text-success text-base font-bold tracking-wide">OPERATIONAL</span>
+                <span className="text-white text-base font-bold tracking-wide">OPERATIONAL</span>
               </div>
             </div>
             
