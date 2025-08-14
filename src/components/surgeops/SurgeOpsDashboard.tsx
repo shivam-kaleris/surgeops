@@ -169,31 +169,38 @@ export function SurgeOpsDashboard() {
             </div>
           </div>
 
-          {/* Yard Status - Full Width */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <YardGrid 
-              blocks={dashboardData.yardBlocks}
-              onBlockSelect={setSelectedYardBlock}
-              selectedBlock={selectedYardBlock}
-            />
-          </motion.div>
+          {/* Operations Section - Aligned with Main Content */}
+          <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
+            <div className="xl:col-span-3 space-y-4">
+              {/* Yard Status - Aligned with Chart Width */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <YardGrid 
+                  blocks={dashboardData.yardBlocks}
+                  onBlockSelect={setSelectedYardBlock}
+                  selectedBlock={selectedYardBlock}
+                />
+              </motion.div>
 
-          {/* Berth Status - Below Yard Status */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-          >
-            <BerthStatus 
-              berths={dashboardData.berths}
-              onBerthSelect={setSelectedBerth}
-              selectedBerth={selectedBerth}
-            />
-          </motion.div>
+              {/* Berth Status - Aligned with Chart Width */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <BerthStatus 
+                  berths={dashboardData.berths}
+                  onBerthSelect={setSelectedBerth}
+                  selectedBerth={selectedBerth}
+                />
+              </motion.div>
+            </div>
+            {/* Empty space for right column alignment */}
+            <div className="xl:col-span-1"></div>
+          </div>
         </div>
       </motion.div>
     </div>
