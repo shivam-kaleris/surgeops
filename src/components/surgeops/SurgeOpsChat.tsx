@@ -131,7 +131,7 @@ export function SurgeOpsChat() {
         </div>
 
         {/* Chat Messages */}
-        <div className="space-y-3 max-h-60 overflow-y-auto">
+        <div className="space-y-3 max-h-48 overflow-y-auto">
           <AnimatePresence>
             {messages.map((message) => (
               <motion.div
