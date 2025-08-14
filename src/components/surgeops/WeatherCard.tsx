@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Cloud, Thermometer, Wind, Droplets, ChevronDown, ChevronUp, MapPin } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import type { WeatherData } from "../../lib/mockData";
 
@@ -15,6 +16,7 @@ interface WeatherCardProps {
 export function WeatherCard({ weather, onLocationChange }: WeatherCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPort, setSelectedPort] = useState("singapore");
+  const [tempUnit, setTempUnit] = useState<'C' | 'F'>('C');
 
   const ports = [
     { value: "singapore", label: "Singapore Port", timeZone: "Asia/Singapore" },
@@ -34,6 +36,18 @@ export function WeatherCard({ weather, onLocationChange }: WeatherCardProps) {
       onLocationChange?.(port.label, port.timeZone);
     }
   };
+
+  const convertTemperature = (temp: number, unit: 'C' | 'F') => {
+    if (unit === 'F') {
+      return (temp * 9/5) + 32;
+    }
+    return temp;
+  };
+
+  const formatTemperature = (temp: number) => {
+    const convertedTemp = convertTemperature(temp, tempUnit);
+    return `${convertedTemp.toFixed(1)}°${tempUnit}`;
+  };
   const getImpactColor = (impact: WeatherData["operationalImpact"]) => {
     switch (impact) {
       case "High":
@@ -49,7 +63,7 @@ export function WeatherCard({ weather, onLocationChange }: WeatherCardProps) {
   const weatherMetrics = [
     {
       label: "Temperature",
-      value: `${weather.temperature.toFixed(1)}°C`,
+      value: formatTemperature(weather.temperature),
       icon: Thermometer,
       color: "text-secondary"
     },
@@ -121,6 +135,31 @@ export function WeatherCard({ weather, onLocationChange }: WeatherCardProps) {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Temperature Unit Toggle */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">
+                Temperature Unit
+              </label>
+              <div className="flex gap-1">
+                <Button
+                  size="sm"
+                  variant={tempUnit === 'C' ? 'default' : 'outline'}
+                  onClick={() => setTempUnit('C')}
+                  className="flex-1 h-8 text-xs"
+                >
+                  °C
+                </Button>
+                <Button
+                  size="sm"
+                  variant={tempUnit === 'F' ? 'default' : 'outline'}
+                  onClick={() => setTempUnit('F')}
+                  className="flex-1 h-8 text-xs"
+                >
+                  °F
+                </Button>
+              </div>
             </div>
             {/* Current Condition */}
             <div className="text-center p-4 bg-gradient-depth rounded-lg">
