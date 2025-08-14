@@ -91,36 +91,58 @@ export function SurgeOpsDashboard() {
 
         {/* Professional Dashboard Layout */}
         <div className="space-y-4">
-          {/* Top Section: Analytics & Operations */}
+          {/* Top Section: Main Content with Right Sidebar */}
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
-            {/* Left Panel: Status & Monitoring */}
-            <div className="xl:col-span-1 space-y-4">
+            {/* Main Content - Chart and AI Assistant */}
+            <div className="xl:col-span-3 space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="lg:col-span-2"
+                >
+                  <UtilizationChart data={dashboardData.chartData} />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <SurgeOpsChat />
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Right Sidebar: Collapsible Panels */}
+            <div className="xl:col-span-1 space-y-3">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-              >
-                <WeatherCard weather={dashboardData.weather} />
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
               >
                 <AlertsPanel alerts={dashboardData.alerts} />
               </motion.div>
               
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.5 }}
               >
                 <EventsPanel events={dashboardData.events} />
               </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <WeatherCard weather={dashboardData.weather} />
+              </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.7 }}
               >
@@ -130,26 +152,6 @@ export function SurgeOpsDashboard() {
                 }} />
               </motion.div>
             </div>
-
-            {/* Center Panel: Analytics */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="xl:col-span-2"
-            >
-              <UtilizationChart data={dashboardData.chartData} />
-            </motion.div>
-
-            {/* Right Panel: AI Assistant */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-              className="xl:col-span-1"
-            >
-              <SurgeOpsChat />
-            </motion.div>
           </div>
 
           {/* Bottom Section: Operations Overview */}
