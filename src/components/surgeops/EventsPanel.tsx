@@ -1,17 +1,20 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Activity, Ship, Cloud, AlertTriangle, Settings, TrendingUp, ChevronDown, ChevronUp } from "lucide-react";
+import { Activity, Ship, Cloud, AlertTriangle, Settings, TrendingUp, ChevronDown, ChevronUp, X, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { format } from "date-fns";
 import type { Event } from "../../lib/mockData";
 
 interface EventsPanelProps {
   events: Event[];
+  onClearEvent?: (eventId: string) => void;
+  onClearAll?: () => void;
 }
 
-export function EventsPanel({ events }: EventsPanelProps) {
+export function EventsPanel({ events, onClearEvent, onClearAll }: EventsPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
   const getEventIcon = (type: Event["type"]) => {
     switch (type) {
@@ -68,12 +71,32 @@ export function EventsPanel({ events }: EventsPanelProps) {
               <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4 text-primary" />
                 Recent Events
+                {events.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {events.length}
+                  </Badge>
+                )}
               </div>
-              {isOpen ? (
-                <ChevronUp className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              )}
+              <div className="flex items-center gap-2">
+                {events.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClearAll?.();
+                    }}
+                    className="h-6 w-6 p-0 hover:bg-destructive/20 hover:text-destructive"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                )}
+                {isOpen ? (
+                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                )}
+              </div>
             </CardTitle>
             <p className="text-xs text-muted-foreground">
               Live system activity feed
@@ -99,7 +122,7 @@ export function EventsPanel({ events }: EventsPanelProps) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex items-start gap-3 p-2 bg-gradient-depth rounded-lg hover:shadow-card transition-all duration-200"
+                    className="flex items-start gap-3 p-2 bg-gradient-depth rounded-lg hover:shadow-card transition-all duration-200 group"
                   >
                     {/* Event Icon */}
                     <div className={`p-1.5 rounded-full bg-muted/30`}>
@@ -123,6 +146,19 @@ export function EventsPanel({ events }: EventsPanelProps) {
                         {event.message}
                       </p>
                     </div>
+
+                    {/* Clear Button */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onClearEvent?.(event.id);
+                      }}
+                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/20 hover:text-destructive"
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
 
                     {/* Severity Indicator */}
                     <div className={`w-2 h-2 rounded-full mt-1 ${

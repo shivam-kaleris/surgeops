@@ -15,14 +15,25 @@ export function SurgeOpsDashboard() {
   const [dashboardData, setDashboardData] = useState(mockData.getDashboardData());
   const [selectedYardBlock, setSelectedYardBlock] = useState<string | null>(null);
   const [selectedBerth, setSelectedBerth] = useState<string | null>(null);
+  const [events, setEvents] = useState(dashboardData.events);
 
   // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setDashboardData(mockData.getDashboardData());
+      const newData = mockData.getDashboardData();
+      setDashboardData(newData);
+      setEvents(newData.events);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleClearEvent = (eventId: string) => {
+    setEvents(events.filter(event => event.id !== eventId));
+  };
+
+  const handleClearAllEvents = () => {
+    setEvents([]);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-depth p-3 md:p-4">
@@ -130,7 +141,11 @@ export function SurgeOpsDashboard() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <EventsPanel events={dashboardData.events} />
+                <EventsPanel 
+                  events={events} 
+                  onClearEvent={handleClearEvent}
+                  onClearAll={handleClearAllEvents}
+                />
               </motion.div>
               
               <motion.div
