@@ -101,33 +101,44 @@ export function SurgeOpsChat() {
   };
 
   return (
-    <Card className="bg-card shadow-card border-0 hover:shadow-glow transition-all duration-300 h-[400px] flex flex-col">
-      <CardHeader className="flex-shrink-0">
+    <Card className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 shadow-xl border-0 hover:shadow-2xl transition-all duration-300 h-[400px] flex flex-col overflow-hidden">
+      <CardHeader className="flex-shrink-0 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base font-semibold">
-            <MessageSquare className="h-4 w-4 text-primary" />
-            SurgeOps AI Assistant
+          <CardTitle className="flex items-center gap-3 text-base font-bold">
+            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+              <Bot className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="text-white">SurgeOps AI Assistant</div>
+              <div className="text-xs text-indigo-200 font-normal">Powered by RAG Technology</div>
+            </div>
           </CardTitle>
-          <Badge variant="secondary" className="text-xs bg-success/20 text-success border-success/30">
-            Online
-          </Badge>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-xs text-indigo-200">Live</span>
+            </div>
+            <Badge variant="secondary" className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm">
+              Online
+            </Badge>
+          </div>
         </div>
-        <p className="text-xs text-muted-foreground">
-          RAG-powered chatbot with live data access
-        </p>
       </CardHeader>
-      <CardContent className="flex-1 overflow-hidden flex flex-col">
+      <CardContent className="flex-1 overflow-hidden flex flex-col bg-white/50 backdrop-blur-sm">
         {/* Sample Queries */}
-        <div className="space-y-2 flex-shrink-0 mb-4">
-          <p className="text-xs font-medium text-muted-foreground">Try asking:</p>
-          <div className="flex flex-wrap gap-1">
+        <div className="space-y-2 flex-shrink-0 mb-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
+          <p className="text-xs font-semibold text-indigo-700 flex items-center gap-2">
+            <MessageSquare className="h-3 w-3" />
+            Quick Actions
+          </p>
+          <div className="flex flex-wrap gap-2">
             {sampleQueries.slice(0, 2).map((query, index) => (
               <Button
                 key={index}
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="text-xs h-6 px-2"
                 onClick={() => handleSampleQuery(query)}
+                className="text-xs px-3 py-1 bg-white/80 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 hover:text-indigo-800 rounded-full transition-all duration-200 hover:scale-105"
               >
                 {query}
               </Button>
@@ -143,79 +154,64 @@ export function SurgeOpsChat() {
                 key={message.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                transition={{ duration: 0.3 }}
+                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                {message.type === 'assistant' && (
-                  <div className="p-2 rounded-full bg-primary/10">
-                    <Bot className="h-4 w-4 text-primary" />
-                  </div>
-                )}
-                
-                <div className={`max-w-[80%] space-y-2 ${message.type === 'user' ? 'order-first' : ''}`}>
-                  <div
-                    className={`p-3 rounded-lg ${
-                      message.type === 'user'
-                        ? 'bg-primary text-primary-foreground ml-auto'
-                        : 'bg-muted/50'
-                    }`}
-                  >
-                    <p className="text-sm leading-relaxed">{message.message}</p>
-                  </div>
-                  
-                  {/* Sources */}
-                  {message.sources && (
-                    <div className="space-y-1">
-                      {message.sources.map((source, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="p-2 bg-accent/10 border border-accent/20 rounded text-xs"
-                        >
-                          <div className="flex items-center gap-2">
-                            <ExternalLink className="h-3 w-3 text-accent" />
-                            <span className="font-medium text-accent">{source.title}</span>
-                          </div>
-                          <p className="text-muted-foreground mt-1">{source.snippet}</p>
-                        </motion.div>
-                      ))}
+                <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                  message.type === 'user' 
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white' 
+                    : 'bg-white border border-gray-200 text-gray-800 shadow-sm'
+                }`}>
+                  <div className="flex items-start gap-2">
+                    {message.type === 'assistant' && (
+                      <div className="flex-shrink-0 mt-0.5">
+                        <div className="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                          <Bot className="h-3 w-3 text-white" />
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <p className={`text-xs leading-relaxed ${
+                        message.type === 'user' ? 'text-white' : 'text-gray-700'
+                      }`}>
+                        {message.message}
+                      </p>
+                      {message.sources && (
+                        <div className="mt-2 space-y-1">
+                          {message.sources.map((source, index) => (
+                            <div key={index} className="text-xs">
+                              <button className="flex items-center gap-1 text-indigo-600 hover:text-indigo-700 transition-colors">
+                                <ExternalLink className="h-3 w-3" />
+                                <span className="underline">{source.title}</span>
+                              </button>
+                              <p className="text-gray-500 text-xs mt-1">{source.snippet}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
-                  
-                  <p className="text-xs text-muted-foreground">
-                    {message.timestamp.toLocaleTimeString('en-US', { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
-                    })}
-                  </p>
-                </div>
-
-                {message.type === 'user' && (
-                  <div className="p-2 rounded-full bg-secondary/10">
-                    <User className="h-4 w-4 text-secondary" />
                   </div>
-                )}
+                </div>
               </motion.div>
             ))}
           </AnimatePresence>
 
-          {/* Loading indicator */}
           {isLoading && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex gap-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex justify-start"
             >
-              <div className="p-2 rounded-full bg-primary/10">
-                <Bot className="h-4 w-4 text-primary" />
-              </div>
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" />
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-100" />
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-200" />
+              <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <Bot className="h-3 w-3 text-white" />
+                  </div>
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -223,13 +219,13 @@ export function SurgeOpsChat() {
         </div>
 
         {/* Input section */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 border-t border-indigo-100">
           <div className="flex gap-2">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask about vessels, yards, weather..."
-              className="flex-1 text-xs"
+              className="flex-1 text-xs border-indigo-200 focus:border-indigo-400 bg-white/80 backdrop-blur-sm"
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
               disabled={isLoading}
             />
@@ -237,7 +233,7 @@ export function SurgeOpsChat() {
               onClick={handleSendMessage}
               disabled={!inputValue.trim() || isLoading}
               size="sm"
-              className="px-3"
+              className="px-4 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 border-0 shadow-md hover:shadow-lg transition-all duration-200"
             >
               <Send className="h-3 w-3" />
             </Button>
