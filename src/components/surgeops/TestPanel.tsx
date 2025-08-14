@@ -139,11 +139,11 @@ export function TestPanel({ onSimulate }: TestPanelProps) {
 
                 <div>
                   <label className="text-sm text-muted-foreground mb-2 block">Severity</label>
-                  <div className="flex gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {severities.map((severity) => (
                       <Badge
                         key={severity.value}
-                        className={`cursor-pointer transition-all ${
+                        className={`cursor-pointer transition-all text-center justify-center ${
                           selectedSeverity === severity.value 
                             ? severity.color 
                             : "bg-muted text-muted-foreground hover:bg-muted/80"
