@@ -44,7 +44,7 @@ export function TestPanel({ onSimulate }: TestPanelProps) {
     { value: "LOW", color: "bg-success text-success-foreground" },
     { value: "MEDIUM", color: "bg-warning text-warning-foreground" },
     { value: "HIGH", color: "bg-destructive text-destructive-foreground" },
-    { value: "CRITICAL", color: "bg-destructive text-destructive-foreground" }
+    { value: "CRITICAL", color: "bg-slate-900 text-white border-slate-800" }
   ];
 
   return (
