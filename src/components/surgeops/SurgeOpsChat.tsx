@@ -1,0 +1,242 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { MessageSquare, Send, Bot, User, ExternalLink } from "lucide-react";
+
+interface ChatMessage {
+  id: string;
+  type: "user" | "assistant";
+  message: string;
+  timestamp: Date;
+  sources?: Array<{
+    title: string;
+    snippet: string;
+    uri: string;
+  }>;
+}
+
+export function SurgeOpsChat() {
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: "1",
+      type: "assistant",
+      message: "Hello! I'm your SurgeOps AI Assistant. I can help you with vessel scheduling, yard allocations, surge predictions, and operational queries. How can I assist you today?",
+      timestamp: new Date(),
+    }
+  ]);
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const sampleQueries = [
+    "Which vessels are arriving in the next 48 hours?",
+    "What's the lowest utilized yard block?",
+    "Show me current weather impact on operations",
+    "Suggest allocation for MV Ocean Grace"
+  ];
+
+  const mockResponses = [
+    {
+      message: "Based on current data, 3 vessels are arriving in the next 48 hours: MV Ocean Grace (1,850 TEU, ETA 14:30), MSC Determination (2,100 TEU, ETA tomorrow 08:15), and COSCO Fortune (1,650 TEU, ETA tomorrow 16:45). Total expected: 5,600 TEU.",
+      sources: [
+        { title: "Vessel Schedule Database", snippet: "Real-time vessel tracking and ETA updates", uri: "/data/vessels" }
+      ]
+    },
+    {
+      message: "Block B5 has the lowest utilization at 62.3% (872/1,400 TEU). It's a Standard category block with 528 TEU available capacity. This makes it ideal for incoming standard container allocations.",
+      sources: [
+        { title: "Yard Utilization Report", snippet: "Live yard block capacity monitoring", uri: "/data/yards" }
+      ]
+    },
+    {
+      message: "Current weather: 28.5°C, wind 18.2 km/h, humidity 76%. Operational impact: Medium. Wind conditions are approaching the 20 km/h threshold that may affect crane operations. Monitor for further increases.",
+      sources: [
+        { title: "Weather Monitoring System", snippet: "Real-time weather data and operational impact assessment", uri: "/data/weather" }
+      ]
+    },
+    {
+      message: "For MV Ocean Grace (1,850 TEU, Reefer cargo), I recommend Block B3 which has 312 TEU available capacity (61.0% utilized). As a Reefer-category block, it's equipped with proper refrigeration infrastructure. Alternative: Block B5 if refrigeration isn't critical.",
+      sources: [
+        { title: "Cargo Allocation Guidelines", snippet: "Best practices for container type matching", uri: "/docs/allocation-sop" }
+      ]
+    }
+  ];
+
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: "user",
+      message: inputValue,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue("");
+    setIsLoading(true);
+
+    // Simulate AI response delay
+    setTimeout(() => {
+      const responseIndex = Math.floor(Math.random() * mockResponses.length);
+      const response = mockResponses[responseIndex];
+      
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: "assistant",
+        message: response.message,
+        timestamp: new Date(),
+        sources: response.sources
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  const handleSampleQuery = (query: string) => {
+    setInputValue(query);
+  };
+
+  return (
+    <Card className="bg-card shadow-card border-0">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+          <MessageSquare className="h-5 w-5 text-primary" />
+          SurgeOps AI Assistant
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          RAG-powered chatbot with live data access
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Sample Queries */}
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">Try asking:</p>
+          <div className="flex flex-wrap gap-1">
+            {sampleQueries.slice(0, 2).map((query, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                size="sm"
+                className="text-xs h-6 px-2"
+                onClick={() => handleSampleQuery(query)}
+              >
+                {query}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Chat Messages */}
+        <div className="space-y-3 max-h-60 overflow-y-auto">
+          <AnimatePresence>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                {message.type === 'assistant' && (
+                  <div className="p-2 rounded-full bg-primary/10">
+                    <Bot className="h-4 w-4 text-primary" />
+                  </div>
+                )}
+                
+                <div className={`max-w-[80%] space-y-2 ${message.type === 'user' ? 'order-first' : ''}`}>
+                  <div
+                    className={`p-3 rounded-lg ${
+                      message.type === 'user'
+                        ? 'bg-primary text-primary-foreground ml-auto'
+                        : 'bg-muted/50'
+                    }`}
+                  >
+                    <p className="text-sm leading-relaxed">{message.message}</p>
+                  </div>
+                  
+                  {/* Sources */}
+                  {message.sources && (
+                    <div className="space-y-1">
+                      {message.sources.map((source, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="p-2 bg-accent/10 border border-accent/20 rounded text-xs"
+                        >
+                          <div className="flex items-center gap-2">
+                            <ExternalLink className="h-3 w-3 text-accent" />
+                            <span className="font-medium text-accent">{source.title}</span>
+                          </div>
+                          <p className="text-muted-foreground mt-1">{source.snippet}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <p className="text-xs text-muted-foreground">
+                    {message.timestamp.toLocaleTimeString('en-US', { 
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    })}
+                  </p>
+                </div>
+
+                {message.type === 'user' && (
+                  <div className="p-2 rounded-full bg-secondary/10">
+                    <User className="h-4 w-4 text-secondary" />
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* Loading indicator */}
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex gap-3"
+            >
+              <div className="p-2 rounded-full bg-primary/10">
+                <Bot className="h-4 w-4 text-primary" />
+              </div>
+              <div className="p-3 bg-muted/50 rounded-lg">
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" />
+                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-100" />
+                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-200" />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Input */}
+        <div className="flex gap-2">
+          <Input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Ask about vessels, yards, weather, or operations..."
+            className="flex-1"
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            disabled={isLoading}
+          />
+          <Button
+            onClick={handleSendMessage}
+            disabled={!inputValue.trim() || isLoading}
+            size="sm"
+            className="px-3"
+          >
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
