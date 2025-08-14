@@ -151,12 +151,11 @@ export function SurgeOpsDashboard() {
               </motion.div>
             </div>
 
-            {/* Yard Status - Aligned with Chart */}
+            {/* Yard Status - Full Width of Main Content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="lg:col-span-3"
             >
               <YardGrid 
                 blocks={dashboardData.yardBlocks}
@@ -165,12 +164,11 @@ export function SurgeOpsDashboard() {
               />
             </motion.div>
 
-            {/* Berth Status - Aligned with Chart */}
+            {/* Berth Status - Full Width of Main Content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="lg:col-span-3"
             >
               <BerthStatus 
                 berths={dashboardData.berths}
