@@ -55,7 +55,7 @@ export function DashboardKPIs({ data }: DashboardKPIsProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
       {kpiCards.map((kpi, index) => (
         <motion.div
           key={kpi.title}
@@ -66,18 +66,18 @@ export function DashboardKPIs({ data }: DashboardKPIsProps) {
           className="animate-fade-in-up"
         >
           <Card className="bg-card shadow-card border-0 hover:shadow-depth transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-xs font-medium text-muted-foreground">
                 {kpi.title}
               </CardTitle>
-              <kpi.icon className="h-4 w-4 text-muted-foreground" />
+              <kpi.icon className="h-3 w-3 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="text-2xl font-bold text-foreground">
+            <CardContent className="space-y-2 pt-0">
+              <div className="text-xl font-bold text-foreground">
                 {kpi.value}
               </div>
               <Badge 
-                className={`${getColorClasses(kpi.color)} text-xs font-medium px-2 py-1`}
+                className={`${getColorClasses(kpi.color)} text-xs font-medium px-2 py-0.5`}
                 variant="secondary"
               >
                 {kpi.trend}
