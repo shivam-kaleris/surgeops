@@ -37,7 +37,7 @@ export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4">
+    <div className="w-full">
       <Card className="bg-card border shadow-sm">
         <CardHeader className="pb-4">
           <div className="flex items-center gap-2">

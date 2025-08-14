@@ -41,7 +41,7 @@ export function BerthStatus({ berths, onBerthSelect, selectedBerth }: BerthStatu
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 mt-6">
+    <div className="w-full mt-6">
       <Card className="bg-card border shadow-sm">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
