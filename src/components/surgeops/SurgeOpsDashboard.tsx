@@ -169,34 +169,31 @@ export function SurgeOpsDashboard() {
             </div>
           </div>
 
-          {/* Bottom Section: Operations Overview - Side by Side */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Yard Operations */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <YardGrid 
-                blocks={dashboardData.yardBlocks}
-                onBlockSelect={setSelectedYardBlock}
-                selectedBlock={selectedYardBlock}
-              />
-            </motion.div>
+          {/* Yard Status - Full Width */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <YardGrid 
+              blocks={dashboardData.yardBlocks}
+              onBlockSelect={setSelectedYardBlock}
+              selectedBlock={selectedYardBlock}
+            />
+          </motion.div>
 
-            {/* Berth Operations */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <BerthStatus 
-                berths={dashboardData.berths}
-                onBerthSelect={setSelectedBerth}
-                selectedBerth={selectedBerth}
-              />
-            </motion.div>
-          </div>
+          {/* Berth Status - Below Yard Status */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <BerthStatus 
+              berths={dashboardData.berths}
+              onBerthSelect={setSelectedBerth}
+              selectedBerth={selectedBerth}
+            />
+          </motion.div>
         </div>
       </motion.div>
     </div>
