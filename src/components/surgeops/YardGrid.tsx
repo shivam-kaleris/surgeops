@@ -71,7 +71,7 @@ export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps
         </p>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
           {blocks.map((block, index) => {
             const StatusIcon = getStatusIcon(block.status);
             const isSelected = selectedBlock === block.id;
@@ -82,39 +82,39 @@ export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <Card 
-                  className={`cursor-pointer transition-all duration-300 hover:shadow-depth ${
+                  className={`cursor-pointer transition-all duration-300 hover:shadow-depth min-h-[200px] flex flex-col ${
                     isSelected ? 'ring-2 ring-primary shadow-glow' : ''
                   } ${block.status === 'critical' ? 'animate-surge-pulse' : ''}`}
                   onClick={() => handleBlockClick(block)}
                 >
-                  <CardContent className="p-4 space-y-3">
+                  <CardContent className="p-3 space-y-2 flex-1 flex flex-col">
                     {/* Header */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-lg">{block.code}</h3>
-                        <StatusIcon className={`h-4 w-4 ${
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-1 min-w-0">
+                        <h3 className="font-bold text-base truncate">{block.code}</h3>
+                        <StatusIcon className={`h-3 w-3 flex-shrink-0 ${
                           block.status === 'critical' ? 'text-destructive' :
                           block.status === 'warning' ? 'text-warning' : 'text-success'
                         }`} />
                       </div>
-                      <Badge className={getCategoryColor(block.category)} variant="secondary">
+                      <Badge className={`${getCategoryColor(block.category)} text-xs px-1 py-0 flex-shrink-0`} variant="secondary">
                         {block.category}
                       </Badge>
                     </div>
 
                     {/* Utilization */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
+                    <div className="space-y-1 flex-1">
+                      <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Utilization</span>
                         <span className="font-medium">{block.utilization}%</span>
                       </div>
                       <Progress 
                         value={block.utilization} 
-                        className="h-2"
+                        className="h-1.5"
                         style={{
                           background: `hsl(var(--muted))`,
                         }}
@@ -122,13 +122,13 @@ export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps
                     </div>
 
                     {/* Capacity */}
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-xs">
                       <span className="text-muted-foreground">Capacity</span>
-                      <span className="font-medium">{block.current}/{block.capacity} TEU</span>
+                      <span className="font-medium">{block.current}/{block.capacity}</span>
                     </div>
 
                     {/* Status Badge */}
-                    <Badge className={`${getStatusColor(block.status)} w-full justify-center`}>
+                    <Badge className={`${getStatusColor(block.status)} w-full justify-center text-xs py-1 mt-auto`}>
                       {block.status.toUpperCase()}
                     </Badge>
 
@@ -138,10 +138,11 @@ export function YardGrid({ blocks, onBlockSelect, selectedBlock }: YardGridProps
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         transition={{ duration: 0.3 }}
+                        className="mt-2"
                       >
                         <Button 
                           size="sm" 
-                          className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                          className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground text-xs py-1 h-7"
                         >
                           Execute Move
                         </Button>
