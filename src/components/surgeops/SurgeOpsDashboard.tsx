@@ -70,10 +70,13 @@ export function SurgeOpsDashboard() {
                   <p className="text-primary-foreground/80 text-sm">Port Authority Operations Center</p>
                 </div>
               </div>
-              
-              <div className="flex items-center gap-2 px-3 py-1 bg-success/20 rounded-full">
-                <div className="w-2 h-2 bg-success rounded-full"></div>
-                <span className="text-success text-sm font-medium">OPERATIONAL</span>
+            </div>
+            
+            {/* Centered OPERATIONAL Status */}
+            <div className="absolute left-1/2 transform -translate-x-1/2">
+              <div className="flex items-center gap-2 px-4 py-2 bg-success/20 rounded-full">
+                <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
+                <span className="text-success text-base font-bold tracking-wide">OPERATIONAL</span>
               </div>
             </div>
             
