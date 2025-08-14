@@ -126,80 +126,80 @@ export function SurgeOpsDashboard() {
               </div>
             </div>
 
-            {/* Right Sidebar: Collapsible Panels */}
-            <div className="xl:col-span-1 space-y-3">
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <AlertsPanel alerts={dashboardData.alerts} />
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <EventsPanel 
-                  events={events} 
-                  onClearEvent={handleClearEvent}
-                  onClearAll={handleClearAllEvents}
-                />
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <WeatherCard weather={dashboardData.weather} />
-              </motion.div>
+            {/* Right Sidebar: Fixed Position Panels */}
+            <div className="xl:col-span-1 space-y-3 relative">
+              <div className="sticky top-4 space-y-3">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <AlertsPanel alerts={dashboardData.alerts} />
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <EventsPanel 
+                    events={events} 
+                    onClearEvent={handleClearEvent}
+                    onClearAll={handleClearAllEvents}
+                  />
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <WeatherCard weather={dashboardData.weather} />
+                </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 }}
-              >
-                <TestPanel onSimulate={(type, magnitude) => {
-                  console.log(`Simulating ${type} with magnitude ${magnitude}`);
-                  setDashboardData(mockData.getDashboardData());
-                }} />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 }}
+                >
+                  <TestPanel onSimulate={(type, magnitude) => {
+                    console.log(`Simulating ${type} with magnitude ${magnitude}`);
+                    setDashboardData(mockData.getDashboardData());
+                  }} />
+                </motion.div>
+              </div>
             </div>
           </div>
 
-          {/* Operations Section - Aligned with Main Content */}
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
-            <div className="xl:col-span-3 space-y-4">
-              {/* Yard Status - Aligned with Chart Width */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <YardGrid 
-                  blocks={dashboardData.yardBlocks}
-                  onBlockSelect={setSelectedYardBlock}
-                  selectedBlock={selectedYardBlock}
-                />
-              </motion.div>
+          {/* Operations Section - Independent from Sidebar */}
+          <div className="space-y-4">
+            {/* Yard Status */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="w-full max-w-[calc(75%-1rem)]" // Match main content width
+            >
+              <YardGrid 
+                blocks={dashboardData.yardBlocks}
+                onBlockSelect={setSelectedYardBlock}
+                selectedBlock={selectedYardBlock}
+              />
+            </motion.div>
 
-              {/* Berth Status - Aligned with Chart Width */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-              >
-                <BerthStatus 
-                  berths={dashboardData.berths}
-                  onBerthSelect={setSelectedBerth}
-                  selectedBerth={selectedBerth}
-                />
-              </motion.div>
-            </div>
-            {/* Empty space for right column alignment */}
-            <div className="xl:col-span-1"></div>
+            {/* Berth Status */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="w-full max-w-[calc(75%-1rem)]" // Match main content width
+            >
+              <BerthStatus 
+                berths={dashboardData.berths}
+                onBerthSelect={setSelectedBerth}
+                selectedBerth={selectedBerth}
+              />
+            </motion.div>
           </div>
         </div>
       </motion.div>
