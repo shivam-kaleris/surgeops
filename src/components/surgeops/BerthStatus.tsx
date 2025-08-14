@@ -16,9 +16,9 @@ export function BerthStatus({ berths, onBerthSelect, selectedBerth }: BerthStatu
   const getStatusColor = (status: Berth["status"]) => {
     switch (status) {
       case "Occupied":
-        return "bg-warning text-warning-foreground";
-      case "Maintenance":
         return "bg-destructive text-destructive-foreground";
+      case "Maintenance":
+        return "bg-warning text-warning-foreground";
       case "Available":
       default:
         return "bg-success text-success-foreground";
@@ -64,7 +64,10 @@ export function BerthStatus({ berths, onBerthSelect, selectedBerth }: BerthStatu
             >
               <Card 
                 className={`cursor-pointer transition-all duration-300 hover:shadow-depth ${
-                  isSelected ? 'ring-2 ring-primary shadow-glow' : ''
+                  isSelected ? 'ring-2 ring-primary shadow-glow' : 
+                  berth.status === 'Occupied' ? 'border-destructive/50 hover:border-destructive' :
+                  berth.status === 'Available' ? 'border-success/50 hover:border-success' :
+                  'hover:border-primary/50'
                 }`}
                 onClick={() => onBerthSelect(berth.id)}
               >

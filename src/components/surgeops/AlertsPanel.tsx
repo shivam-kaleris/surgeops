@@ -2,7 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, CheckCircle, X, ArrowRight } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { AlertTriangle, CheckCircle, X, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 import { format } from "date-fns";
 import type { Alert } from "../../lib/mockData";
 
@@ -11,6 +13,7 @@ interface AlertsPanelProps {
 }
 
 export function AlertsPanel({ alerts }: AlertsPanelProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const getSeverityColor = (severity: Alert["severity"]) => {
     switch (severity) {
       case "CRITICAL":
@@ -33,127 +36,137 @@ export function AlertsPanel({ alerts }: AlertsPanelProps) {
   const acknowledgedAlerts = alerts.filter(alert => alert.acknowledged);
 
   return (
-    <Card className="bg-card shadow-card border-0">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-          <AlertTriangle className="h-5 w-5 text-destructive" />
-          Active Alerts
-          {activeAlerts.length > 0 && (
-            <Badge className="bg-destructive text-destructive-foreground ml-auto">
-              {activeAlerts.length}
-            </Badge>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3 max-h-80 overflow-y-auto">
-        <AnimatePresence mode="popLayout">
-          {activeAlerts.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-8 text-muted-foreground"
-            >
-              <CheckCircle className="h-12 w-12 mx-auto mb-3 text-success" />
-              <p className="font-medium">All Clear</p>
-              <p className="text-sm">No active alerts</p>
-            </motion.div>
-          ) : (
-            activeAlerts.map((alert, index) => {
-              const SeverityIcon = getSeverityIcon(alert.severity);
-              
-              return (
+    <Card className="bg-card shadow-card border-0 hover:shadow-glow transition-all duration-300">
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleTrigger asChild>
+          <CardHeader className="cursor-pointer hover:bg-muted/30 transition-colors">
+            <CardTitle className="flex items-center justify-between text-lg font-semibold">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-destructive" />
+                Active Alerts
+                <Badge variant="destructive" className="ml-2">{activeAlerts.length}</Badge>
+              </div>
+              {isOpen ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
+            </CardTitle>
+          </CardHeader>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent>
+          <CardContent className="space-y-3 max-h-80 overflow-y-auto pt-0">
+            <AnimatePresence mode="popLayout">
+              {activeAlerts.length === 0 ? (
                 <motion.div
-                  key={alert.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`p-3 rounded-lg border-l-4 ${
-                    alert.severity === "CRITICAL" ? 
-                    "border-l-destructive bg-destructive/5" : 
-                    alert.severity === "HIGH" ?
-                    "border-l-destructive/80 bg-destructive/5" :
-                    alert.severity === "MEDIUM" ?
-                    "border-l-warning bg-warning/5" :
-                    "border-l-secondary bg-secondary/5"
-                  } ${alert.severity === "CRITICAL" ? "animate-surge-pulse" : ""}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-8 text-muted-foreground"
                 >
-                  {/* Alert Header */}
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <SeverityIcon className={`h-4 w-4 ${
-                        alert.severity === "CRITICAL" || alert.severity === "HIGH" ? 
-                        "text-destructive" : 
-                        alert.severity === "MEDIUM" ? 
-                        "text-warning" : 
-                        "text-secondary"
-                      }`} />
-                      <Badge className={getSeverityColor(alert.severity)} variant="secondary">
-                        {alert.severity}
-                      </Badge>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-
-                  {/* Alert Message */}
-                  <p className="text-sm font-medium mb-2">{alert.message}</p>
-
-                  {/* Timestamp */}
-                  <p className="text-xs text-muted-foreground mb-3">
-                    {format(new Date(alert.timestamp), "MMM dd, HH:mm")}
-                  </p>
-
-                  {/* Suggestion */}
-                  {alert.suggestion && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      className="p-2 bg-primary/10 rounded border border-primary/20"
-                    >
-                      <div className="flex items-center gap-2 text-xs font-medium text-primary mb-1">
-                        <ArrowRight className="h-3 w-3" />
-                        Suggested Action
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {alert.suggestion.action}: Move {alert.suggestion.teu} TEU from {alert.suggestion.from} to {alert.suggestion.to}
-                      </p>
-                      <Button size="sm" className="mt-2 h-6 text-xs">
-                        Execute Move
-                      </Button>
-                    </motion.div>
-                  )}
+                  <CheckCircle className="h-12 w-12 mx-auto mb-3 text-success" />
+                  <p className="font-medium">All Clear</p>
+                  <p className="text-sm">No active alerts</p>
                 </motion.div>
-              );
-            })
-          )}
-        </AnimatePresence>
+              ) : (
+                activeAlerts.map((alert, index) => {
+                  const SeverityIcon = getSeverityIcon(alert.severity);
+                  
+                  return (
+                    <motion.div
+                      key={alert.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, x: -100 }}
+                      transition={{ delay: index * 0.1 }}
+                      className={`p-3 rounded-lg border-l-4 hover:bg-muted/20 transition-colors ${
+                        alert.severity === "CRITICAL" ? 
+                        "border-l-destructive bg-destructive/5" : 
+                        alert.severity === "HIGH" ?
+                        "border-l-destructive/80 bg-destructive/5" :
+                        alert.severity === "MEDIUM" ?
+                        "border-l-warning bg-warning/5" :
+                        "border-l-secondary bg-secondary/5"
+                      } ${alert.severity === "CRITICAL" ? "animate-surge-pulse" : ""}`}
+                    >
+                      {/* Alert Header */}
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <SeverityIcon className={`h-4 w-4 ${
+                            alert.severity === "CRITICAL" || alert.severity === "HIGH" ? 
+                            "text-destructive" : 
+                            alert.severity === "MEDIUM" ? 
+                            "text-warning" : 
+                            "text-secondary"
+                          }`} />
+                          <Badge className={getSeverityColor(alert.severity)} variant="secondary">
+                            {alert.severity}
+                          </Badge>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
 
-        {/* Recently Acknowledged */}
-        {acknowledgedAlerts.length > 0 && (
-          <div className="pt-3 border-t">
-            <p className="text-xs font-medium text-muted-foreground mb-2">
-              Recently Acknowledged ({acknowledgedAlerts.length})
-            </p>
-            <div className="space-y-1">
-              {acknowledgedAlerts.slice(0, 2).map((alert) => (
-                <div
-                  key={alert.id}
-                  className="text-xs p-2 bg-muted/30 rounded flex items-center gap-2"
-                >
-                  <CheckCircle className="h-3 w-3 text-success" />
-                  <span className="truncate">{alert.message}</span>
+                      {/* Alert Message */}
+                      <p className="text-sm font-medium mb-2">{alert.message}</p>
+
+                      {/* Timestamp */}
+                      <p className="text-xs text-muted-foreground mb-3 font-mono">
+                        {format(new Date(alert.timestamp), "MMM dd, HH:mm")}
+                      </p>
+
+                      {/* Suggestion */}
+                      {alert.suggestion && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="p-2 bg-primary/10 rounded border border-primary/20"
+                        >
+                          <div className="flex items-center gap-2 text-xs font-medium text-primary mb-1">
+                            <ArrowRight className="h-3 w-3" />
+                            Suggested Action
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {alert.suggestion.action}: Move {alert.suggestion.teu} TEU from {alert.suggestion.from} to {alert.suggestion.to}
+                          </p>
+                          <Button size="sm" className="mt-2 h-6 text-xs">
+                            Execute Move
+                          </Button>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  );
+                })
+              )}
+            </AnimatePresence>
+
+            {/* Recently Acknowledged */}
+            {acknowledgedAlerts.length > 0 && (
+              <div className="pt-3 border-t">
+                <p className="text-xs font-medium text-muted-foreground mb-2">
+                  Recently Acknowledged ({acknowledgedAlerts.length})
+                </p>
+                <div className="space-y-1">
+                  {acknowledgedAlerts.slice(0, 2).map((alert) => (
+                    <div
+                      key={alert.id}
+                      className="text-xs p-2 bg-muted/30 rounded flex items-center gap-2"
+                    >
+                      <CheckCircle className="h-3 w-3 text-success" />
+                      <span className="truncate">{alert.message}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </CardContent>
+              </div>
+            )}
+          </CardContent>
+        </CollapsibleContent>
+      </Collapsible>
     </Card>
   );
 }

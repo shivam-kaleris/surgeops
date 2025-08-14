@@ -45,29 +45,40 @@ export function SurgeOpsDashboard() {
           </p>
         </motion.div>
 
-        {/* Main Grid Layout */}
+        {/* Row 1: KPIs - Full Width */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="w-full"
+        >
+          <DashboardKPIs data={dashboardData.kpis} />
+        </motion.div>
+
+        {/* Row 2: Chart + Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="lg:col-span-2"
+          >
+            <UtilizationChart data={dashboardData.chartData} />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <WeatherCard weather={dashboardData.weather} />
+          </motion.div>
+        </div>
+
+        {/* Row 3: Operations Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column - Main Dashboard (8 cols) */}
+          {/* Yard + Berth Status */}
           <div className="lg:col-span-8 space-y-6">
-            {/* KPIs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <DashboardKPIs data={dashboardData.kpis} />
-            </motion.div>
-
-            {/* Utilization Chart */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <UtilizationChart data={dashboardData.chartData} />
-            </motion.div>
-
-            {/* Yard Status Grid */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -80,7 +91,6 @@ export function SurgeOpsDashboard() {
               />
             </motion.div>
 
-            {/* Berth Status */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -94,53 +104,39 @@ export function SurgeOpsDashboard() {
             </motion.div>
           </div>
 
-          {/* Right Column - Side Panels (4 cols) */}
+          {/* Control Panels */}
           <div className="lg:col-span-4 space-y-6">
-            {/* Weather Card */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <WeatherCard weather={dashboardData.weather} />
-            </motion.div>
-
-            {/* Alerts Panel */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <AlertsPanel alerts={dashboardData.alerts} />
-            </motion.div>
-
-            {/* Events Panel */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <EventsPanel events={dashboardData.events} />
+              <AlertsPanel alerts={dashboardData.alerts} />
             </motion.div>
 
-            {/* SurgeOps Chat */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <SurgeOpsChat />
+              <EventsPanel events={dashboardData.events} />
             </motion.div>
 
-            {/* Test Panel */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.7 }}
             >
+              <SurgeOpsChat />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8 }}
+            >
               <TestPanel onSimulate={(type, magnitude) => {
                 console.log(`Simulating ${type} with magnitude ${magnitude}`);
-                // Trigger dashboard updates
                 setDashboardData(mockData.getDashboardData());
               }} />
             </motion.div>

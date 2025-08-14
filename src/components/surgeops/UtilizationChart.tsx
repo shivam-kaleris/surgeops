@@ -30,27 +30,55 @@ interface UtilizationChartProps {
 }
 
 export function UtilizationChart({ data }: UtilizationChartProps) {
+  // Generate prediction data (future 4 hours)
+  const predictionData = Array.from({length: 4}, (_, i) => {
+    const lastUtilization = data[data.length - 1]?.utilization || 70;
+    const trend = data.length >= 2 ? data[data.length - 1].utilization - data[data.length - 2].utilization : 0;
+    return lastUtilization + (trend * (i + 1)) + (Math.random() - 0.5) * 5;
+  });
+
   const chartData = {
-    labels: data.map(point => point.time),
+    labels: [
+      ...data.map(point => point.time),
+      ...Array.from({length: 4}, (_, i) => {
+        const hour = new Date().getHours() + i + 1;
+        return `${hour.toString().padStart(2, '0')}:00`;
+      })
+    ],
     datasets: [
       {
         label: "Yard Utilization %",
-        data: data.map(point => point.utilization),
-        borderColor: "hsl(210 100% 40%)",
-        backgroundColor: "hsl(210 100% 40% / 0.1)",
+        data: [...data.map(point => point.utilization), ...Array(4).fill(null)],
+        borderColor: "hsl(var(--primary))",
+        backgroundColor: "hsl(var(--primary) / 0.1)",
         borderWidth: 3,
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: "hsl(210 100% 40%)",
+        pointBackgroundColor: "hsl(var(--primary))",
         pointBorderColor: "white",
         pointBorderWidth: 2,
         pointRadius: 4,
         pointHoverRadius: 6
       },
       {
+        label: "Prediction",
+        data: [...Array(data.length).fill(null), ...predictionData],
+        borderColor: "hsl(var(--accent))",
+        backgroundColor: "hsl(var(--accent) / 0.1)",
+        borderWidth: 2,
+        borderDash: [8, 4],
+        fill: false,
+        tension: 0.4,
+        pointBackgroundColor: "hsl(var(--accent))",
+        pointBorderColor: "white",
+        pointBorderWidth: 2,
+        pointRadius: 3,
+        pointHoverRadius: 5
+      },
+      {
         label: "Critical Threshold",
-        data: data.map(point => point.threshold),
-        borderColor: "hsl(0 84.2% 60.2%)",
+        data: [...data.map(point => point.threshold), ...Array(4).fill(95)],
+        borderColor: "hsl(var(--destructive))",
         backgroundColor: "transparent",
         borderWidth: 2,
         borderDash: [5, 5],
@@ -99,10 +127,11 @@ export function UtilizationChart({ data }: UtilizationChartProps) {
         title: {
           display: true,
           text: "Time (24H)",
-          color: "hsl(215.4 16.3% 46.9%)",
+          color: "hsl(var(--muted-foreground))",
           font: {
             size: 12,
-            weight: "bold" as const
+            weight: "bold" as const,
+            family: "ui-monospace, monospace"
           }
         },
         grid: {
@@ -122,10 +151,11 @@ export function UtilizationChart({ data }: UtilizationChartProps) {
         title: {
           display: true,
           text: "Utilization %",
-          color: "hsl(215.4 16.3% 46.9%)",
+          color: "hsl(var(--muted-foreground))",
           font: {
             size: 12,
-            weight: "bold" as const
+            weight: "bold" as const,
+            family: "ui-monospace, monospace"
           }
         },
         min: 0,
@@ -157,23 +187,23 @@ export function UtilizationChart({ data }: UtilizationChartProps) {
   const trend = currentUtilization - previousUtilization;
 
   return (
-    <Card className="bg-card shadow-card border-0">
-      <CardHeader className="flex flex-row items-center justify-between">
+    <Card className="bg-card shadow-card border-0 hover:shadow-glow transition-all duration-300">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
           <CardTitle className="flex items-center gap-2 text-lg font-semibold">
             <TrendingUp className="h-5 w-5 text-primary" />
             24-Hour Utilization Trend
           </CardTitle>
           <p className="text-sm text-muted-foreground mt-1">
-            Current: {currentUtilization}% 
-            <span className={`ml-2 ${trend >= 0 ? 'text-destructive' : 'text-success'}`}>
+            Current: <span className="font-mono">{currentUtilization}%</span>
+            <span className={`ml-2 font-mono ${trend >= 0 ? 'text-destructive' : 'text-success'}`}>
               {trend >= 0 ? '+' : ''}{trend.toFixed(1)}%
             </span>
           </p>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="h-64">
+      <CardContent className="pt-0">
+        <div className="h-80">
           <Line data={chartData} options={options} />
         </div>
       </CardContent>
