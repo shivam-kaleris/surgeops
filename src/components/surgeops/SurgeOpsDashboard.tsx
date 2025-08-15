@@ -9,6 +9,7 @@ import { AlertsPanel } from "./AlertsPanel";
 import { EventsPanel } from "./EventsPanel";
 import { SurgeOpsChat } from "./SurgeOpsChat";
 import { TestPanel } from "./TestPanel";
+import { SurgeActionPlan } from "./SurgeActionPlan";
 import { mockData } from "../../lib/mockData";
 
 export function SurgeOpsDashboard() {
@@ -18,16 +19,29 @@ export function SurgeOpsDashboard() {
   const [events, setEvents] = useState(dashboardData.events);
   const [currentPort, setCurrentPort] = useState("Singapore Port");
   const [currentTimeZone, setCurrentTimeZone] = useState("Asia/Singapore");
+  const [showSurgeActionPlan, setShowSurgeActionPlan] = useState(false);
+  const [surgeDetected, setSurgeDetected] = useState(false);
 
-  // Simulate real-time updates
+  // Simulate real-time updates and surge detection
   useEffect(() => {
     const interval = setInterval(() => {
       const newData = mockData.getDashboardData();
       setDashboardData(newData);
       setEvents(newData.events);
+      
+      // Check for surge conditions (e.g., high waiting vessels or critical alerts)
+      const waitingVessels = newData.kpis.waitingVessels || 0;
+      const criticalAlerts = newData.alerts.filter(alert => alert.severity === "CRITICAL").length;
+      
+      if ((parseInt(waitingVessels.toString()) > 8 || criticalAlerts > 2) && !surgeDetected) {
+        setSurgeDetected(true);
+        setShowSurgeActionPlan(true);
+      } else if (parseInt(waitingVessels.toString()) <= 5 && criticalAlerts <= 1) {
+        setSurgeDetected(false);
+      }
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [surgeDetected]);
 
   const handleClearEvent = (eventId: string) => {
     setEvents(events.filter(event => event.id !== eventId));
@@ -101,15 +115,48 @@ export function SurgeOpsDashboard() {
           </div>
         </motion.div>
 
-        {/* Row 1: KPIs - Full Width */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="w-full"
-        >
-          <DashboardKPIs data={dashboardData.kpis} />
-        </motion.div>
+        {/* Row 1: KPIs and Surge Alert - Full Width */}
+        <div className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="w-full"
+          >
+            <DashboardKPIs data={dashboardData.kpis} />
+          </motion.div>
+
+          {/* Surge Alert Banner */}
+          {surgeDetected && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full pr-80"
+            >
+              <div className="bg-gradient-to-r from-warning/10 to-destructive/10 border border-warning/30 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-warning/20 rounded-lg">
+                      <svg className="w-5 h-5 text-warning" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-foreground">Surge Condition Detected</h3>
+                      <p className="text-sm text-muted-foreground">High vessel congestion requiring immediate action plan</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowSurgeActionPlan(true)}
+                    className="px-6 py-2 bg-warning text-warning-foreground rounded-lg font-semibold hover:bg-warning/90 transition-colors"
+                  >
+                    Generate Action Plan
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
 
         {/* Professional Dashboard Layout */}
         <div className="relative space-y-4">
@@ -207,6 +254,13 @@ export function SurgeOpsDashboard() {
             </motion.div>
           </div>
         </div>
+
+        {/* Surge Action Plan Modal */}
+        <SurgeActionPlan
+          dashboardData={dashboardData}
+          isVisible={showSurgeActionPlan}
+          onClose={() => setShowSurgeActionPlan(false)}
+        />
       </motion.div>
     </div>
   );
