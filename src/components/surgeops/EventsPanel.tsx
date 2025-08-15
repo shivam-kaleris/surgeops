@@ -15,7 +15,7 @@ interface EventsPanelProps {
 }
 
 export function EventsPanel({ events, onClearEvent, onClearAll }: EventsPanelProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const getEventIcon = (type: Event["type"]) => {
     switch (type) {
       case "vessel":
