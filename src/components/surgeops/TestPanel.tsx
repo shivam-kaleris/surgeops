@@ -10,9 +10,10 @@ import { FlaskConical, Zap, Cloud, AlertTriangle, RotateCcw, ChevronDown, Chevro
 
 interface TestPanelProps {
   onSimulate: (type: string, magnitude: number) => void;
+  onSurgeActionPlan?: () => void;
 }
 
-export function TestPanel({ onSimulate }: TestPanelProps) {
+export function TestPanel({ onSimulate, onSurgeActionPlan }: TestPanelProps) {
   const [surgeMagnitude, setSurgeMagnitude] = useState([0.3]);
   const [selectedRegion, setSelectedRegion] = useState("red-sea");
   const [selectedSeverity, setSelectedSeverity] = useState("HIGH");
@@ -22,7 +23,14 @@ export function TestPanel({ onSimulate }: TestPanelProps) {
   const handleSimulateSurge = () => {
     setIsSimulating(true);
     onSimulate("surge", surgeMagnitude[0]);
-    setTimeout(() => setIsSimulating(false), 3000);
+    
+    // Trigger the surge action plan
+    setTimeout(() => {
+      setIsSimulating(false);
+      if (onSurgeActionPlan) {
+        onSurgeActionPlan();
+      }
+    }, 2000);
   };
 
   const handleRerouteSignal = () => {

@@ -157,28 +157,6 @@ export function SurgeOpsDashboard() {
             </motion.div>
           )}
 
-          {/* Manual Trigger for Testing */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="w-full pr-80"
-          >
-            <div className="bg-card border rounded-lg p-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Test Surge Action Plan:</span>
-                <button
-                  onClick={() => {
-                    setSurgeDetected(true);
-                    setShowSurgeActionPlan(true);
-                  }}
-                  className="px-4 py-1 bg-primary text-primary-foreground rounded text-sm hover:bg-primary/90 transition-colors"
-                >
-                  Simulate Surge
-                </button>
-              </div>
-            </div>
-          </motion.div>
         </div>
 
         {/* Professional Dashboard Layout */}
@@ -270,10 +248,16 @@ export function SurgeOpsDashboard() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <TestPanel onSimulate={(type, magnitude) => {
-                console.log(`Simulating ${type} with magnitude ${magnitude}`);
-                setDashboardData(mockData.getDashboardData());
-              }} />
+              <TestPanel 
+                onSimulate={(type, magnitude) => {
+                  console.log(`Simulating ${type} with magnitude ${magnitude}`);
+                  setDashboardData(mockData.getDashboardData());
+                }}
+                onSurgeActionPlan={() => {
+                  setSurgeDetected(true);
+                  setShowSurgeActionPlan(true);
+                }}
+              />
             </motion.div>
           </div>
         </div>
