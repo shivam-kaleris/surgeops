@@ -312,6 +312,22 @@ export function SurgeActionPlan({ dashboardData, isVisible, onClose }: SurgeActi
               exit={{ opacity: 0 }}
               className="space-y-6"
             >
+              {/* Action Buttons at Top */}
+              <div className="flex gap-3 pb-2">
+                <Button onClick={handleAccept} className="bg-success hover:bg-success/90 text-white">
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Accept Plan
+                </Button>
+                <Button onClick={handleEdit} variant="outline">
+                  <Edit3 className="h-4 w-4 mr-2" />
+                  Update Plan
+                </Button>
+                <Button onClick={handleReject} variant="destructive">
+                  <XCircle className="h-4 w-4 mr-2" />
+                  Reject Plan
+                </Button>
+              </div>
+
               {/* Plan Overview */}
               <Card className={`${getSeverityBg(actionPlan.severity)} border`}>
                 <CardHeader>
@@ -349,7 +365,7 @@ export function SurgeActionPlan({ dashboardData, isVisible, onClose }: SurgeActi
               {/* Action Steps */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Implementation Steps</CardTitle>
+                  <CardTitle className="text-lg">Action Plan</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ol className="space-y-3">
@@ -398,22 +414,6 @@ export function SurgeActionPlan({ dashboardData, isVisible, onClose }: SurgeActi
                   </CardContent>
                 </Card>
               )}
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
-                <Button onClick={handleAccept} className="bg-success hover:bg-success/90 text-white">
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Accept Plan
-                </Button>
-                <Button onClick={handleEdit} variant="outline">
-                  <Edit3 className="h-4 w-4 mr-2" />
-                  Update Plan
-                </Button>
-                <Button onClick={handleReject} variant="destructive">
-                  <XCircle className="h-4 w-4 mr-2" />
-                  Reject Plan
-                </Button>
-              </div>
             </motion.div>
           )}
 
@@ -429,7 +429,7 @@ export function SurgeActionPlan({ dashboardData, isVisible, onClose }: SurgeActi
                 <CardHeader>
                   <CardTitle>Edit Action Plan</CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    Modify the implementation steps below. Each line should represent one step.
+                    Modify the action plan steps below. Each line should represent one step.
                   </p>
                 </CardHeader>
                 <CardContent>
@@ -437,7 +437,7 @@ export function SurgeActionPlan({ dashboardData, isVisible, onClose }: SurgeActi
                     value={editedPlan}
                     onChange={(e) => setEditedPlan(e.target.value)}
                     rows={8}
-                    placeholder="Enter implementation steps, one per line..."
+                    placeholder="Enter action plan steps, one per line..."
                     className="text-sm"
                   />
                 </CardContent>

@@ -102,7 +102,7 @@ export function SurgeOpsChat() {
 
   return (
     <Card className="bg-card shadow-card border-0 hover:shadow-glow transition-all duration-300 h-[400px] flex flex-col">
-      <CardHeader className="flex-shrink-0 bg-gradient-ocean text-white">
+      <CardHeader className="flex-shrink-0 bg-blue-500 text-white">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-3 text-base font-semibold">
             <div className="p-1.5 bg-white/10 rounded-lg">
